@@ -20,7 +20,7 @@ public class JobService {
     public Job findById(Long id) {
         return jobRepository.findById(id)
             .orElseThrow(() -> new EntityNotFoundException("Job not found: " + id));
-    }
+    } 
 
     @Transactional
     public void saveJob(JobStatusPostRequestDto requestDto) {
@@ -35,5 +35,12 @@ public class JobService {
             .orElseThrow(() -> new EntityNotFoundException("Job not found: " + id));
         job.setStatus(requestDto.getStatus());
         return job;
+    }
+    @Transactional
+    public void deleteJob(Long id) {
+        Job job = jobRepository.findById(id)
+            .orElseThrow(() -> new EntityNotFoundException("Job not found: " + id));
+        jobRepository.delete(job);
+       
     }
 }
