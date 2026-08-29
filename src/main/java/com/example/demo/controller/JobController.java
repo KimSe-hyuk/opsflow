@@ -5,7 +5,6 @@ import com.example.demo.entity.Job;
 import com.example.demo.service.JobService;
 
 import lombok.RequiredArgsConstructor;
-import org.jspecify.annotations.Nullable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -30,8 +29,9 @@ public class JobController {
     }
 
     @PostMapping
-    public ResponseEntity<@Nullable Object> create(@RequestBody JobStatusPostRequestDto request) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(jobService.saveJob(request));
+    public ResponseEntity<String> create(@RequestBody JobStatusPostRequestDto request) {
+        jobService.saveJob(request);
+        return ResponseEntity.status(HttpStatus.CREATED).body("Job created successfully");
     }
 
  
@@ -40,8 +40,8 @@ public class JobController {
         @PathVariable Long id,
         @RequestBody JobStatusUpdateRequestDto request
     ) {
-        jobService.updateStatus(request);
-        return ResponseEntity.ok("Job status updated successfully");
+        jobService.updateStatus(id,request);
+        return ResponseEntity.status(HttpStatus.OK).body("Job status updated successfully");
     }
 
  

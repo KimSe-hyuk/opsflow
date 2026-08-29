@@ -17,23 +17,22 @@ public class JobService {
 
     private final JobRepository jobRepository;
     
-    @Transactional
     public Job findById(Long id) {
         return jobRepository.findById(id)
             .orElseThrow(() -> new EntityNotFoundException("Job not found: " + id));
     }
 
     @Transactional
-    public Job saveJob(JobStatusPostRequestDto requestDto) {
-        return jobRepository.save(new Job(requestDto.getName(), requestDto.getStatus()));
+    public void saveJob(JobStatusPostRequestDto requestDto) {
+        jobRepository.save(new Job(requestDto.getName(), requestDto.getStatus()));
     }
 
   
 
     @Transactional
-    public Job updateStatus(JobStatusUpdateRequestDto requestDto) {
-        Job job = jobRepository.findById(requestDto.getId())
-            .orElseThrow(() -> new EntityNotFoundException("Job not found: " + requestDto.getId()));
+    public Job updateStatus(Long id,JobStatusUpdateRequestDto requestDto) {
+        Job job = jobRepository.findById(id)
+            .orElseThrow(() -> new EntityNotFoundException("Job not found: " + id));
         job.setStatus(requestDto.getStatus());
         return job;
     }
