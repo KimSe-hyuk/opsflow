@@ -1,5 +1,6 @@
 package com.example.demo.service;
 
+import com.example.demo.dto.JobResponseDto;
 import com.example.demo.dto.JobStatusPostRequestDto;
 import com.example.demo.dto.JobStatusUpdateRequestDto;
 import com.example.demo.entity.Job;
@@ -10,23 +11,31 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-@Service
-@RequiredArgsConstructor
-@Transactional(readOnly = true)
-public class JobService {
+    @Service
+    @RequiredArgsConstructor
+    @Transactional(readOnly = true)
+    public class JobService {
 
-    private final JobRepository jobRepository;
-    
-    public Job findById(Long id) {
-        return jobRepository.findById(id)
-            .orElseThrow(() -> new EntityNotFoundException("Job not found: " + id));
-    } 
+        private final JobRepository jobRepository;
+        
+        public Job findById(Long id) {
+            return jobRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Job not found: " + id));
+        } 
 
     @Transactional
-    public void saveJob(JobStatusPostRequestDto requestDto) {
-        jobRepository.save(new Job(requestDto.getName(), requestDto.getStatus()));
-    }
+    public JobResponseDto saveJob(JobStatusPostRequestDto request) {
 
+        Job job = jobRepository.save(
+                new Job(request.getName(), request.getStatus())
+        );
+
+        return new JobResponseDto(
+                job.getId(),
+                job.getName(),
+                job.getStatus()
+        );
+    }
   
 
     @Transactional
