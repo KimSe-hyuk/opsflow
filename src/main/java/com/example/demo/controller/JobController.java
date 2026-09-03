@@ -5,6 +5,8 @@ import com.example.demo.dto.JobStatusPostRequestDto;
 import com.example.demo.dto.JobStatusUpdateRequestDto;
 import com.example.demo.entity.Job;
 import com.example.demo.service.JobService;
+
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -32,7 +34,8 @@ public class JobController {
 
     @PostMapping
     public ResponseEntity<JobResponseDto> create(
-            @RequestBody JobStatusPostRequestDto requestDto
+        @Valid
+        @RequestBody JobStatusPostRequestDto requestDto
     ) {
         return ResponseEntity
                 .status(HttpStatus.CREATED)

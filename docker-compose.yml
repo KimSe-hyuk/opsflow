@@ -4,7 +4,7 @@ services:
   mysql:
     image: mysql:8.0
     container_name: demo-mysql
-    restart: always
+    restart: unless-stopped
     environment:
       MYSQL_ROOT_PASSWORD: rootpassword
       MYSQL_DATABASE: demo_db
@@ -23,7 +23,7 @@ services:
   redis:
     image: redis:7.2
     container_name: demo-redis
-    restart: always
+    restart: unless-stopped
     ports:
       - "6380:6379"
     volumes:
