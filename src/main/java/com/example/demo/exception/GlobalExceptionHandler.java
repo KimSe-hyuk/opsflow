@@ -14,7 +14,7 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ErrorResponseDto> handleEntityNotFound(EntityNotFoundException ex) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorResponseDto(HttpStatus.NOT_FOUND.value(), ex.getMessage()));
     }
-  @ExceptionHandler(MethodArgumentNotValidException.class)
+    @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ErrorResponseDto> handleMethodArgumentNotValid(
             MethodArgumentNotValidException ex
     ) {
