@@ -56,4 +56,13 @@ public class JobController {
         jobService.deleteJob(id);
         return ResponseEntity.noContent().build();
     }
+
+    @PostMapping("/{id}/start")
+    public ResponseEntity<Void> startJob(@PathVariable Long id) {
+    System.out.println(Thread.currentThread().getName());
+
+    jobService.startJob(id);
+
+    return ResponseEntity.accepted().build();
+}
 }

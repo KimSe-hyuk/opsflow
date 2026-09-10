@@ -11,12 +11,19 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+
+
     @Service
-    @RequiredArgsConstructor
+    @RequiredArgsConstructor 
     @Transactional(readOnly = true)
     public class JobService {
 
         private final JobRepository jobRepository;
+        private final JobWorker jobWorker;
+
+        public void startJob(Long jobId) {
+            jobWorker.process(jobId);
+        }
         
         public Job findById(Long id) {
             return jobRepository.findById(id)
@@ -52,4 +59,9 @@ import org.springframework.transaction.annotation.Transactional;
         jobRepository.delete(job);
        
     }
+
+   
+
+       
+    
 }
