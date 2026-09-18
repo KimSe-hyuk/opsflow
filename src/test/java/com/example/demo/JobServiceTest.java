@@ -25,7 +25,7 @@ public class JobServiceTest {
     @Test
     public void testFindById() {
         // 테스트 코드 작성
-        Job job = new Job("Test Job", "Pending");
+        Job job = new Job("Test Job", "Pending",0);
         when(jobRepository.findById(1L)).thenReturn(Optional.of(job));
         Job result = jobService.findById(1L);
         assertEquals(job, result);

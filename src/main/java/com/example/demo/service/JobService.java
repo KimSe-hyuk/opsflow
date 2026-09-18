@@ -11,30 +11,44 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+  
+@Service
+@RequiredArgsConstructor 
+@Transactional(readOnly = true)
+public class JobService {
+    private final int MAX_RETRY = 3;
+    private final int START_RETRY = 0;
+    private final JobRepository jobRepository;
+    private final JobWorker jobWorker;
 
+    public void startJob(Long jobId) {
+        jobWorker.process(jobId);
+    }
+    
+    public Job findById(Long id) {
+        return jobRepository.findById(id)
+            .orElseThrow(() -> new EntityNotFoundException("Job not found: " + id));
+    } 
+    @Transactional 
+    public void recordFailure(Long id){
+        Job job = jobRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Job not found: " + id));
+     if (job.getRetryCount() >= MAX_RETRY) {
+        return;
+    }
 
-    @Service
-    @RequiredArgsConstructor 
-    @Transactional(readOnly = true)
-    public class JobService {
+    job.setRetryCount(job.getRetryCount() + 1);
 
-        private final JobRepository jobRepository;
-        private final JobWorker jobWorker;
-
-        public void startJob(Long jobId) {
-            jobWorker.process(jobId);
-        }
-        
-        public Job findById(Long id) {
-            return jobRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Job not found: " + id));
-        } 
-
+    if (job.getRetryCount() >= MAX_RETRY) {
+        job.setStatus("FAILED");
+    }
+            
+         
+    }
     @Transactional
     public JobResponseDto saveJob(JobStatusPostRequestDto request) {
 
         Job job = jobRepository.save(
-                new Job(request.getName(), request.getStatus())
+                new Job(request.getName(), request.getStatus(),START_RETRY)
         );
 
         return new JobResponseDto(

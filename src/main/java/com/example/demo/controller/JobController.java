@@ -4,6 +4,7 @@ import com.example.demo.dto.JobResponseDto;
 import com.example.demo.dto.JobStatusPostRequestDto;
 import com.example.demo.dto.JobStatusUpdateRequestDto;
 import com.example.demo.entity.Job;
+import com.example.demo.service.JobRetryService;
 import com.example.demo.service.JobService;
 
 import jakarta.validation.Valid;
@@ -25,6 +26,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class JobController {
 
     private final JobService jobService;
+    private final JobRetryService jobRetryService;
 
     @GetMapping("/{id}")
     public ResponseEntity<Job> getJobById(@PathVariable Long id) {
@@ -64,5 +66,16 @@ public class JobController {
     jobService.startJob(id);
 
     return ResponseEntity.accepted().build();
-}
+    }
+    @PostMapping ("/{id}/error")
+    public ResponseEntity<Void> errorCheck(@PathVariable Long id){
+        jobService.recordFailure(id);
+        return ResponseEntity.noContent().build();
+    }
+
+    @PostMapping ("/{id}/retry-test")
+     public ResponseEntity<Void> retryTest(@PathVariable Long id){
+        jobRetryService.retryJob(id);
+        return ResponseEntity.noContent().build();
+    }
 }

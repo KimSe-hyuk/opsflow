@@ -1,6 +1,7 @@
 package com.example.demo.entity;
 
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -24,10 +25,12 @@ public class Job {
 
     private String name;
     private String status;
-
-    public Job(String name, String status) {
+   @Column(name = "retry_count", nullable = false)
+    private int  retryCount = 0;
+    public Job(String name, String status, int retryCount) {
         this.name = name;
         this.status = status;
+        this.retryCount = retryCount;
     }
  
    
